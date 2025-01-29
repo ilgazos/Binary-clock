@@ -1,0 +1,37 @@
+@keyframes spin-once {
+    0%, 100% {
+        transform: translateY(0%);
+    }
+    50% {
+        transform: translateY(-15%);
+    }
+}
+
+.animate-spin-once {
+    animation: spin-once 0.8s ease-in-out forwards;
+}
+
+@keyframes fadeInFromTop {
+    0% {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeInFromTop {
+    animation: fadeInFromTop 1.5s ease-out;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
