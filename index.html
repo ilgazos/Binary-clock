@@ -4,22 +4,88 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Binary Clock</title>
-    <!-- TailwindCSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="styles.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.37/dist/vue.global.prod.js"></script>
+    <style>
+        @keyframes spin-once {
+            0%, 100% {
+                transform: translateY(0%);
+            }
+            50% {
+                transform: translateY(-15%);
+            }
+        }
+
+        .animate-spin-once {
+            animation: spin-once 0.8s ease-in-out forwards;
+        }
+
+        @keyframes fadeInFromTop {
+            0% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeInFromTop {
+            animation: fadeInFromTop 1.5s ease-out;
+        }
+    </style>
 </head>
 <body class="bg-gradient-to-b from-gray-900 to-black flex flex-col justify-center items-center text-white min-h-screen">
     <div class="text-6xl font-extrabold mb-8 tracking-widest text-green-500 text-center mt-10 animate-fadeInFromTop">
         Binary Clock
     </div>
 
-    <div id="app" class="flex flex-col gap-6 items-center py-8"></div>
+    <div id="app" class="flex flex-col gap-6 items-center py-8">
+        <div class="flex gap-4 mb-4">
+            <div v-for="(bit, index) in timeRows[0]" :key="index" 
+                 :class="['w-12 h-12 rounded-lg transition-colors duration-300 inline-block', 
+                          bit === '1' ? 'bg-green-500 animate-spin-once' : 'bg-gray-500']"></div>
+        </div>
+        <div class="flex gap-4 mb-4">
+            <div v-for="(bit, index) in timeRows[1]" :key="index" 
+                 :class="['w-12 h-12 rounded-lg transition-colors duration-300 inline-block', 
+                          bit === '1' ? 'bg-green-500 animate-spin-once' : 'bg-gray-500']"></div>
+        </div>
+        <div class="flex gap-4">
+            <div v-for="(bit, index) in timeRows[2]" :key="index" 
+                 :class="['w-12 h-12 rounded-lg transition-colors duration-300 inline-block', 
+                          bit === '1' ? 'bg-green-500 animate-spin-once' : 'bg-gray-500']"></div>
+        </div>
+    </div>
 
     <footer class="w-full text-center py-4 text-sm text-gray-400">
         <p class="text-gray-500">&copy; 2025 <span class="text-green-500">Coded by Ilgaz</span></p>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.37/dist/vue.global.prod.js"></script>
-    <script src="app.js"></script>
+    <script>
+        const { createApp, ref, onMounted } = Vue;
+
+        createApp({
+            setup() {
+                const timeRows = ref([[], [], []]);
+
+                const updateTime = () => {
+                    const now = new Date();
+                    const hours = now.getHours().toString(2).padStart(6, '0').split('');
+                    const minutes = now.getMinutes().toString(2).padStart(6, '0').split('');
+                    const seconds = now.getSeconds().toString(2).padStart(6, '0').split('');
+                    timeRows.value = [hours, minutes, seconds];
+                };
+
+                onMounted(() => {
+                    updateTime();
+                    setInterval(updateTime, 1000);
+                });
+
+                return { timeRows };
+            },
+        }).mount('#app');
+    </script>
 </body>
 </html>
